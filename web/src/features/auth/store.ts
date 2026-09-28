@@ -1,7 +1,7 @@
 import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 import type { SessionUser } from '@/api/auth'
-import { fetchSession, logout as requestLogout, startLogin } from '@/api/auth'
+import { fetchSession, fetchSSOStatus, logout as requestLogout, startLogin } from '@/api/auth'
 import { APIError } from '@/api/client'
 import { notifyError, notifySuccess } from '@/lib/message'
 
@@ -41,8 +41,9 @@ export const useAuthStore = defineStore('auth', () => {
       catch (caught) {
         user.value = null
         // 401 simply means "not signed in"; anything else is worth surfacing.
-        if (caught instanceof APIError && caught.code === 'sso_disabled') {
-          unavailable.value = true
+        if (caught instanceof APIError && caught.status === 401) {
+          try { unavailable.value = !await fetchSSOStatus() }
+          catch { unavailable.value = false }
         }
         else if (caught instanceof APIError && caught.status !== 401) {
           notifyError(`无法确认登录状态：${caught.message}`)
@@ -60,7 +61,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   function login(redirectTo?: string) {
     if (unavailable.value) {
-      notifyError('服务端尚未配置单点登录，请设置 SSO_CLIENT_ID 后重试。')
+      notifyError('登录暂不可用，请稍后重试或联系管理员。')
       return
     }
     startLogin(redirectTo)

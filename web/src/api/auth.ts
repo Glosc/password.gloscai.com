@@ -27,6 +27,11 @@ export async function fetchSession(): Promise<SessionUser> {
   return response.data
 }
 
+export async function fetchSSOStatus(): Promise<boolean> {
+  const response = await request<DataResponse<{ enabled: boolean }>>('/auth/sso/status')
+  return response.data.enabled
+}
+
 /** Clears the local session and reports the provider's end-session URL. */
 export async function logout(): Promise<{ sso_logout_url: string }> {
   const response = await request<DataResponse<{ sso_logout_url: string }>>('/auth/logout', {

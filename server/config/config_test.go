@@ -43,8 +43,8 @@ func TestLoadSSORequiresSecretAndRedirect(t *testing.T) {
 	if settings.SecureCookies {
 		t.Error("development should default to non-Secure cookies for plain HTTP")
 	}
-	if settings.PostLoginPath != "/profile" {
-		t.Errorf("PostLoginPath = %q, want /profile", settings.PostLoginPath)
+	if settings.PostLoginPath != "/" {
+		t.Errorf("PostLoginPath = %q, want /", settings.PostLoginPath)
 	}
 }
 

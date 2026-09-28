@@ -2,6 +2,7 @@ package config
 
 import (
 	"cmp"
+	"encoding/base64"
 	"fmt"
 	"net"
 	"net/url"
@@ -12,14 +13,15 @@ import (
 )
 
 type Config struct {
-	Environment string
-	HTTPAddr    string
-	LogLevel    string
-	CORSOrigins []string
-	Database    Database
-	Redis       Redis
-	JWT         JWT
-	SSO         SSO
+	Environment    string
+	HTTPAddr       string
+	LogLevel       string
+	CORSOrigins    []string
+	Database       Database
+	Redis          Redis
+	JWT            JWT
+	SSO            SSO
+	VaultMasterKey []byte
 }
 
 type Database struct {
@@ -120,6 +122,13 @@ func Load() (Config, error) {
 	if err != nil {
 		return Config{}, err
 	}
+	var vaultMasterKey []byte
+	if sso.Enabled {
+		vaultMasterKey, err = base64.StdEncoding.DecodeString(os.Getenv("VAULT_MASTER_KEY"))
+		if err != nil || len(vaultMasterKey) != 32 {
+			return Config{}, fmt.Errorf("VAULT_MASTER_KEY must be a base64-encoded 32-byte key when SSO is enabled")
+		}
+	}
 
 	return Config{
 		Environment: environment,
@@ -140,11 +149,12 @@ func Load() (Config, error) {
 		},
 		JWT: JWT{
 			Secret:             jwtSecret,
-			Issuer:             cmp.Or(os.Getenv("JWT_ISSUER"), "go-vue-starter"),
+			Issuer:             cmp.Or(os.Getenv("JWT_ISSUER"), "password-gloscai-com"),
 			TTL:                jwtTTL,
 			UsingDefaultSecret: usingDefaultSecret,
 		},
-		SSO: sso,
+		SSO:            sso,
+		VaultMasterKey: vaultMasterKey,
 	}, nil
 }
 
@@ -168,7 +178,7 @@ func loadSSO(environment string) (SSO, error) {
 		ClientSecret:  os.Getenv("SSO_CLIENT_SECRET"),
 		RedirectURL:   strings.TrimSpace(os.Getenv("SSO_REDIRECT_URL")),
 		Scopes:        splitList(cmp.Or(os.Getenv("SSO_SCOPES"), "user:read")),
-		PostLoginPath: cmp.Or(os.Getenv("SSO_POST_LOGIN_PATH"), "/profile"),
+		PostLoginPath: cmp.Or(os.Getenv("SSO_POST_LOGIN_PATH"), "/"),
 		SecureCookies: secureCookies,
 	}
 

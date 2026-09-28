@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/gloscai/template-go-vue3-docker/server/config"
+	"github.com/Glosc/password.gloscai.com/server/config"
 	"github.com/redis/go-redis/v9"
 )
 

@@ -2,6 +2,24 @@ package config
 
 import "testing"
 
+func TestLoadRequiresVaultMasterKeyWhenSSOEnabled(t *testing.T) {
+	t.Setenv("SSO_CLIENT_ID", "client")
+	t.Setenv("SSO_CLIENT_SECRET", "secret")
+	t.Setenv("SSO_REDIRECT_URL", "http://localhost:5173/api/v1/auth/sso/callback")
+	t.Setenv("VAULT_MASTER_KEY", "")
+	if _, err := Load(); err == nil {
+		t.Fatal("SSO-enabled vault should require a master key")
+	}
+	t.Setenv("VAULT_MASTER_KEY", "YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXowMTIzNDU=")
+	cfg, err := Load()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(cfg.VaultMasterKey) != 32 {
+		t.Fatalf("master key length = %d", len(cfg.VaultMasterKey))
+	}
+}
+
 func TestLoadUsesDevelopmentDefaultSecretWhenUnset(t *testing.T) {
 	t.Setenv("JWT_SECRET", "")
 

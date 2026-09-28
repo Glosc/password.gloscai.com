@@ -95,7 +95,7 @@ import { Separator } from '@/components/ui/separator'
     <Separator />
     <footer>
       <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-8 text-sm text-muted-foreground sm:px-6">
-        <span>Go Vue Starter</span>
+        <span>password-gloscai-com</span>
         <span class="flex items-center gap-2"><DatabaseIcon /> Built for real projects</span>
       </div>
     </footer>

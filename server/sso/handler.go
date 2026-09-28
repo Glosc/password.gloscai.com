@@ -11,7 +11,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gloscai/template-go-vue3-docker/server/auth"
+	"github.com/Glosc/password.gloscai.com/server/auth"
 )
 
 // Store is the persistence this package needs; main injects the SQL
@@ -66,6 +66,9 @@ func NewHandler(opts Options) *Handler {
 }
 
 func (h *Handler) Register(mux *http.ServeMux) {
+	mux.HandleFunc("GET /api/v1/auth/sso/status", func(w http.ResponseWriter, _ *http.Request) {
+		writeJSON(w, http.StatusOK, map[string]any{"data": map[string]bool{"enabled": true}})
+	})
 	mux.HandleFunc("GET /api/v1/auth/sso/login", h.login)
 	mux.HandleFunc("GET /api/v1/auth/sso/callback", h.callback)
 	mux.HandleFunc("POST /api/v1/auth/logout", h.logout)

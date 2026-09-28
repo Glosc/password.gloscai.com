@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import { RouterLink } from 'vue-router'
-import { Code2Icon, Layers3Icon, LogInIcon, UserRoundIcon } from '@lucide/vue'
+import { Code2Icon, KeyRoundIcon, LogInIcon, ShieldCheckIcon, UserRoundIcon } from '@lucide/vue'
 import { useAuthStore } from '@/features/auth/store'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
@@ -17,18 +17,13 @@ onMounted(() => auth.ensureLoaded())
     <div class="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 sm:px-6">
       <RouterLink class="flex items-center gap-2 font-medium" to="/">
         <span class="flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-          <Layers3Icon />
+          <ShieldCheckIcon />
         </span>
-        <span>Go Vue Starter</span>
+        <span>Glosc AI Password</span>
       </RouterLink>
 
       <nav class="flex items-center gap-1" aria-label="主导航">
-        <Button variant="ghost" size="sm" as="a" href="/#stack">
-          技术栈
-        </Button>
-        <Button variant="ghost" size="sm" as="a" href="/#tasks">
-          示例
-        </Button>
+        <Button variant="ghost" size="sm" as-child><RouterLink to="/"><KeyRoundIcon data-icon="inline-start" />密码库</RouterLink></Button>
 
         <Spinner v-if="auth.loading && !auth.resolved" class="mx-2" aria-label="正在确认登录状态" />
 
@@ -55,7 +50,7 @@ onMounted(() => auth.ensureLoaded())
           variant="ghost"
           size="icon"
           as="a"
-          href="https://github.com/gloscai/template-go-vue3-docker"
+          href="https://github.com/Glosc/password.gloscai.com"
           target="_blank"
           rel="noreferrer"
           aria-label="查看 GitHub 仓库"

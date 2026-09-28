@@ -1,4 +1,4 @@
-module github.com/gloscai/template-go-vue3-docker/server
+module github.com/Glosc/password.gloscai.com/server
 
 go 1.25.0
 

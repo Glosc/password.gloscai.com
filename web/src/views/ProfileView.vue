@@ -56,7 +56,7 @@ onMounted(() => auth.ensureLoaded())
         <CardHeader>
           <CardTitle>账号信息</CardTitle>
           <CardDescription>
-            这些字段来自 SSO 的 UserInfo 接口，并以 sub 为主键保存在本地 users 表。
+            你的 Glosc AI 账号信息。
           </CardDescription>
           <CardAction>
             <Badge variant="secondary">SSO 已绑定</Badge>
@@ -95,22 +95,6 @@ onMounted(() => auth.ensureLoaded())
             <dl class="grid gap-4 sm:grid-cols-2">
               <div class="flex flex-col gap-1">
                 <dt class="text-xs text-muted-foreground">
-                  SSO 唯一标识（sub）
-                </dt>
-                <dd class="break-all font-mono text-sm">
-                  {{ auth.user.subject }}
-                </dd>
-              </div>
-              <div class="flex flex-col gap-1">
-                <dt class="text-xs text-muted-foreground">
-                  本地用户 ID
-                </dt>
-                <dd class="font-mono text-sm">
-                  {{ auth.user.id }}
-                </dd>
-              </div>
-              <div class="flex flex-col gap-1">
-                <dt class="text-xs text-muted-foreground">
                   用户名
                 </dt>
                 <dd class="text-sm">
@@ -146,7 +130,7 @@ onMounted(() => auth.ensureLoaded())
         </CardContent>
 
         <CardFooter class="justify-between gap-4">
-          <span class="text-xs text-muted-foreground">API：/api/v1/auth/session</span>
+          <span class="text-xs text-muted-foreground">密码库由你自己的安全 Key 保护</span>
           <Button variant="outline" @click="signOut">
             <LogOutIcon data-icon="inline-start" />
             退出登录

@@ -15,3 +15,5 @@ web/*.tsbuildinfo
 
 # Local data
 data/
+.playwright-cli
+output 

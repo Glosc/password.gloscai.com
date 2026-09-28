@@ -1,4 +1,4 @@
-name: go-vue-starter
+name: password-gloscai-com
 
 services:
   postgres:
@@ -55,14 +55,15 @@ services:
       # .env. An empty value makes the Go config loader's length check fail
       # startup instead of silently signing sessions with a known secret.
       JWT_SECRET: ${JWT_SECRET:?set JWT_SECRET in .env before running the production compose}
-      JWT_ISSUER: ${JWT_ISSUER:-go-vue-starter}
+      JWT_ISSUER: ${JWT_ISSUER:-password-gloscai-com}
       JWT_TTL: ${JWT_TTL:-24h}
       SSO_CLIENT_ID: ${SSO_CLIENT_ID:-}
       SSO_CLIENT_SECRET: ${SSO_CLIENT_SECRET:-}
       SSO_REDIRECT_URL: ${SSO_REDIRECT_URL:-}
       SSO_ISSUER: ${SSO_ISSUER:-https://sso.gloscai.com}
       SSO_SCOPES: ${SSO_SCOPES:-user:read}
-      SSO_POST_LOGIN_PATH: ${SSO_POST_LOGIN_PATH:-/profile}
+      SSO_POST_LOGIN_PATH: ${SSO_POST_LOGIN_PATH:-/}
+      VAULT_MASTER_KEY: ${VAULT_MASTER_KEY:-}
       SESSION_COOKIE_SECURE: ${SESSION_COOKIE_SECURE:-true}
     depends_on:
       postgres:

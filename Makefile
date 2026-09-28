@@ -25,8 +25,9 @@ down: ## 停止开发及生产容器
 logs: ## 跟踪生产形态容器日志
 	docker compose logs -f
 
-test: ## 运行后端测试与前端类型/构建检查
+test: ## 运行后端测试、前端单测与类型/构建检查
 	cd server && go test -race ./...
+	cd web && npm test
 	cd web && npm run build
 
 check: ## 运行 Go 静态检查与前端类型检查

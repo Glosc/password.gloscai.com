@@ -1,0 +1,19 @@
+CREATE TABLE vaults (
+    user_id BIGINT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+    server_key_cipher BYTEA NOT NULL,
+    metadata_cipher BYTEA NOT NULL,
+    version BIGINT NOT NULL DEFAULT 1,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- statement-breakpoint
+
+CREATE TABLE vault_items (
+    user_id BIGINT NOT NULL REFERENCES vaults(user_id) ON DELETE CASCADE,
+    id UUID NOT NULL,
+    payload_cipher BYTEA NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id, id)
+);

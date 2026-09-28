@@ -10,14 +10,14 @@ import (
 	"os"
 	"time"
 
-	"github.com/gloscai/template-go-vue3-docker/server/auth"
-	"github.com/gloscai/template-go-vue3-docker/server/cache"
-	"github.com/gloscai/template-go-vue3-docker/server/config"
-	"github.com/gloscai/template-go-vue3-docker/server/database"
-	"github.com/gloscai/template-go-vue3-docker/server/health"
-	"github.com/gloscai/template-go-vue3-docker/server/sso"
-	"github.com/gloscai/template-go-vue3-docker/server/tasks"
-	"github.com/gloscai/template-go-vue3-docker/server/webassets"
+	"github.com/Glosc/password.gloscai.com/server/auth"
+	"github.com/Glosc/password.gloscai.com/server/cache"
+	"github.com/Glosc/password.gloscai.com/server/config"
+	"github.com/Glosc/password.gloscai.com/server/database"
+	"github.com/Glosc/password.gloscai.com/server/health"
+	"github.com/Glosc/password.gloscai.com/server/sso"
+	"github.com/Glosc/password.gloscai.com/server/vault"
+	"github.com/Glosc/password.gloscai.com/server/webassets"
 )
 
 // whoami is a minimal reference for authenticated endpoints: it exists to
@@ -62,7 +62,6 @@ func run(ctx context.Context) error {
 
 	mux := http.NewServeMux()
 	health.New(db, redisClient).Register(mux)
-	tasks.NewHandler(tasks.NewSQLStore(db)).Register(mux)
 
 	if cfg.SSO.Enabled {
 		sessions, err := auth.NewManager(cfg.JWT.Secret, cfg.JWT.Issuer, cfg.JWT.TTL)
@@ -86,6 +85,11 @@ func run(ctx context.Context) error {
 			DefaultRedirect: cfg.SSO.PostLoginPath,
 		})
 		ssoHandler.Register(mux)
+		vaultStore, err := vault.NewSQLStore(db, cfg.VaultMasterKey)
+		if err != nil {
+			return fmt.Errorf("building vault store: %w", err)
+		}
+		vault.NewHandler(vaultStore, cfg.CORSOrigins).Register(mux, ssoHandler.RequireUser)
 		// Reference example for new authenticated endpoints: wrap the handler
 		// with RequireUser and read the caller via sso.UserFrom(ctx). Copy this
 		// pattern in other packages rather than reimplementing session checks.
@@ -102,13 +106,13 @@ func run(ctx context.Context) error {
 	}
 	mux.Handle("/", frontend)
 
-	handler := withRecovery(logger,
+	handler := withSecurityHeaders(withRecovery(logger,
 		withCORS(cfg.CORSOrigins,
 			withRequestLog(logger,
 				withRequestID(mux),
 			),
 		),
-	)
+	))
 
 	srv := &http.Server{
 		Addr:              cfg.HTTPAddr,

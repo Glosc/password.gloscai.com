@@ -38,7 +38,7 @@ const redirectTo = computed(() => {
   // against a different origin — reject that case explicitly to match the
   // strictness of the backend's sso.safeRedirect.
   const isSameSitePath = typeof target === 'string' && target.startsWith('/') && !target.startsWith('//')
-  return isSameSitePath ? target : '/profile'
+  return isSameSitePath ? target : '/'
 })
 
 const failure = computed(() => {
@@ -82,14 +82,14 @@ onMounted(async () => {
 
           <Alert v-if="auth.unavailable">
             <AlertCircleIcon />
-            <AlertTitle>服务端未配置单点登录</AlertTitle>
+            <AlertTitle>登录暂不可用</AlertTitle>
             <AlertDescription>
-              请在服务端设置 SSO_CLIENT_ID、SSO_CLIENT_SECRET 与 SSO_REDIRECT_URL。
+              请稍后重试，或联系管理员。
             </AlertDescription>
           </Alert>
 
           <p class="text-sm text-muted-foreground">
-            登录过程采用 OAuth 2.0 授权码模式与 PKCE，客户端密钥仅保存在服务端。
+            登录后还需使用你自己的安全 Key 解锁密码库。
           </p>
 
           <Button
@@ -107,7 +107,7 @@ onMounted(async () => {
         <CardFooter class="text-xs text-muted-foreground">
           <span class="flex items-center gap-2">
             <ShieldCheckIcon class="size-4" />
-            会话使用 HttpOnly Cookie 保存，前端无法读取令牌。
+            请确认你正在访问正确的站点，切勿向他人透露安全 Key。
           </span>
         </CardFooter>
       </Card>

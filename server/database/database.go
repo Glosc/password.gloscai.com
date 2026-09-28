@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"fmt"
 
-	"github.com/gloscai/template-go-vue3-docker/server/config"
+	"github.com/Glosc/password.gloscai.com/server/config"
 	_ "github.com/jackc/pgx/v5/stdlib"
 )
 

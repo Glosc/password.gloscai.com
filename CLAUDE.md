@@ -28,7 +28,7 @@ make up/down # 生产形态容器（单一 api 镜像，前端已内嵌，:8080�
 
 浏览器始终使用相对 URL。开发时 Vite 把 `/api`、`/health` 代理到 Go（`web/vite.config.ts` 的 `VITE_API_PROXY_TARGET`）。生产不起 Nginx：`server/Dockerfile` 的 `production` target 先用 Node 阶段构建 `web/`，再把 `web/dist` 复制进 `server/webassets/dist` 用 `go:embed` 打进二进制，由 Go 自己在同一进程内直接提供静态资源并处理 SPA 路由回退（未匹配 `/api/`、`/health/` 的路径回退到 `index.html`）。因此生产只有一个 `api` 镜像/容器；`VITE_API_BASE_URL`（默认 `/api/v1`）作为 `server/Dockerfile` 的构建参数传给内部的前端构建阶段。
 
-### 后端（`server/`，module `github.com/gloscai/template-go-vue3-docker/server`）
+### 后端（`server/`，module `github.com/Glosc/password.gloscai.com/server`）
 
 - 刻意采用扁平、按领域命名的包（`tasks`、`auth`、`sso`、`cache`、`config`、`database`、`health`），**不建** controller/service/repository 分层，也不要 `utils`/`common` 包。新的独立业务（users、billing…）建同级包；依赖组装只发生在 main 包（`server.go` 的 `run()`）。
 - 路由用 Go 1.22+ ServeMux 方法模式（`"GET /api/v1/tasks"`），中间件在 `server.go` 中以嵌套调用组合。
