@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue'
-import { useRouter } from 'vue-router'
+import { RouterLink, useRouter } from 'vue-router'
 import {
   ArrowLeftIcon, CheckIcon, CopyIcon, DownloadIcon, EyeIcon, EyeOffIcon,
   KeyRoundIcon, LockKeyholeIcon, LogOutIcon, MenuIcon, MoreHorizontalIcon,
@@ -8,6 +8,7 @@ import {
   StarIcon, Trash2Icon, UploadIcon, WandSparklesIcon, XIcon,
 } from '@lucide/vue'
 import { Button } from '@/components/ui/button'
+import ThemeControl from '@/components/layout/ThemeControl.vue'
 import { useAuthStore } from '@/features/auth/store'
 import { useVaultStore } from '@/features/vault/store'
 import type { VaultEntry } from '@/features/vault/store'
@@ -251,9 +252,10 @@ async function rotateKey() {
   <div class="vault-app">
     <header class="topbar">
       <Button variant="ghost" size="icon" class="mobile-menu" aria-label="打开菜单" @click="mobileMenu = !mobileMenu"><MenuIcon /></Button>
-      <div class="brand"><span class="brand-mark"><ShieldCheckIcon /></span><strong>Glosc AI</strong><span class="brand-divider" /> <span class="brand-sub">Password</span></div>
+      <RouterLink to="/" class="brand" title="返回首页"><span class="brand-mark"><ShieldCheckIcon /></span><strong>Glosc AI</strong><span class="brand-divider" /> <span class="brand-sub">Password</span></RouterLink>
       <div class="top-actions">
         <span class="account-name">{{ auth.displayName }}</span>
+        <ThemeControl />
         <Button v-if="vault.unlocked" variant="ghost" size="icon" title="锁定密码库" aria-label="锁定密码库" @click="vault.lock()"><LockKeyholeIcon /></Button>
         <Button variant="ghost" size="icon" title="退出登录" aria-label="退出登录" @click="signOut"><LogOutIcon /></Button>
       </div>
@@ -332,4 +334,31 @@ async function rotateKey() {
 @media(max-width:1120px){.workspace{grid-template-columns:195px minmax(350px,1fr) minmax(280px,320px)}.entry-row,.list-head{grid-template-columns:minmax(140px,1fr) minmax(90px,1fr) 30px}.entry-date,.list-head span:nth-child(3){display:none}.pane-heading,.search-wrap{margin-left:18px;margin-right:18px}.pane-heading{padding-left:0;padding-right:0}.entry-row,.list-head{padding-left:18px;padding-right:18px}}
 @media(max-width:800px){.topbar{padding:0 15px}.mobile-menu{display:inline-flex}.brand{margin-right:auto}.brand-divider,.brand-sub,.account-name{display:none}.workspace{display:block;height:calc(100vh - 62px);min-height:0}.sidebar{position:fixed;z-index:15;top:62px;bottom:0;left:0;width:240px;transform:translateX(-100%);transition:transform .2s;box-shadow:8px 0 20px #152c3024}.sidebar-open{transform:translateX(0)}.list-pane{height:100%;border-right:0}.detail-pane{position:fixed;z-index:12;inset:62px 0 0;display:none;overflow:auto}.detail-mobile-open{display:flex}.mobile-back{display:inline-flex}.detail-top{padding:19px}.detail-body{padding:0 19px}.detail-actions{padding:16px 19px}.list-head,.entry-row{grid-template-columns:minmax(150px,1.4fr) minmax(100px,1fr) 24px}}
 @media(max-width:470px){.pane-heading{align-items:start}.pane-heading h1{font-size:23px}.pane-heading p{display:none}.pane-heading button{font-size:12px}.list-head,.entry-row{grid-template-columns:minmax(135px,1fr) 28px}.entry-username,.list-head span:nth-child(2){display:none}.modal-panel{padding:18px}}
+:global(.dark .vault-app){background:var(--background);color:var(--foreground)}
+:global(.dark .topbar),:global(.dark .list-pane){background:var(--background);border-color:var(--border)}
+:global(.dark .sidebar),:global(.dark .detail-pane){background:var(--sidebar);border-color:var(--border)}
+:global(.dark .brand-mark),:global(.dark .detail-value a),:global(.dark .text-link){color:var(--primary)}
+:global(.dark .brand-divider),:global(.dark .side-account),:global(.dark .detail-actions){border-color:var(--border)}
+:global(.dark .side-separator){background:var(--border)}
+:global(.dark .brand-sub),:global(.dark .account-name),:global(.dark .side-account),:global(.dark .pane-heading p),:global(.dark .entry-username),:global(.dark .entry-date),:global(.dark .entry-more),:global(.dark .detail-title span),:global(.dark .detail-field label),:global(.dark .muted-value),:global(.dark .center-state),:global(.dark .access-heading p),:global(.dark .security-note),:global(.dark .helper),:global(.dark .preview-box span),:global(.dark .recovery-panel p){color:var(--muted-foreground)}
+:global(.dark .side-item){color:var(--foreground)}
+:global(.dark .side-item:hover),:global(.dark .side-item.active),:global(.dark .entry-row:hover),:global(.dark .entry-row.selected){background:var(--accent);color:var(--accent-foreground)}
+:global(.dark .account-avatar),:global(.dark .access-icon),:global(.dark .modal-symbol){background:var(--accent);color:var(--primary)}
+:global(.dark .search-wrap),:global(.dark .site-avatar),:global(.dark .detail-value),:global(.dark .note-value),:global(.dark .input-action){background:var(--card);border-color:var(--border);color:var(--foreground)}
+:global(.dark .search-wrap input){color:var(--foreground)}
+:global(.dark .list-head),:global(.dark .segment){background:var(--muted);color:var(--muted-foreground)}
+:global(.dark .entry-row){border-color:var(--border)}
+:global(.dark .site-avatar){color:var(--primary)}
+:global(.dark .empty-list),:global(.dark .detail-placeholder),:global(.dark .empty-list strong){color:var(--muted-foreground)}
+:global(.dark .empty-list svg),:global(.dark .detail-placeholder svg),:global(.dark .center-state svg){color:var(--primary)}
+:global(.dark .access-form label),:global(.dark .modal-form label:not(.check-line)){color:var(--foreground)}
+:global(.dark .access-form input),:global(.dark .modal-form input:not([type=checkbox]):not([type=range]):not([type=file])),:global(.dark .modal-form textarea){background:var(--card);border-color:var(--border);color:var(--foreground)}
+:global(.dark .access-form input:focus),:global(.dark .modal-form input:focus),:global(.dark .modal-form textarea:focus){border-color:var(--ring);box-shadow:0 0 0 2px color-mix(in oklab,var(--ring) 25%,transparent)}
+:global(.dark .modal-panel){background:var(--card);border-color:var(--border);box-shadow:0 20px 60px #0009}
+:global(.dark .generated-value),:global(.dark .secret-code),:global(.dark .preview-box){background:var(--muted);border-color:var(--border)}
+:global(.dark .segment button.active){background:var(--card);color:var(--primary)}
+:global(.dark .reset-link),:global(.dark .danger-note){color:var(--destructive)}
+:global(.dark .generator-options input),:global(.dark .check-line input),:global(.dark .modal-form input[type=range]){accent-color:var(--primary)}
+:global(.dark .spinner){border-color:var(--border);border-top-color:var(--primary)}
+:global(.dark .sidebar){box-shadow:none}
 </style>

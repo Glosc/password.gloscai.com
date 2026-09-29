@@ -44,7 +44,7 @@ export async function logout(): Promise<{ sso_logout_url: string }> {
  * Starts the SSO login. This is a full-page navigation on purpose: the
  * authorization code flow is a browser redirect chain, not a fetch() call.
  */
-export function startLogin(redirectTo: string = window.location.pathname + window.location.search) {
+export function startLogin(redirectTo: string = '/vault') {
   const target = new URL(`${apiBaseURL}/auth/sso/login`, window.location.origin)
   if (redirectTo && redirectTo !== '/login') {
     target.searchParams.set('redirect_to', redirectTo)
